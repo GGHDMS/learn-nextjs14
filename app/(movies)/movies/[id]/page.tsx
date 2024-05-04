@@ -1,24 +1,17 @@
-const URL = "https://nomad-movies.nomadcoders.workers.dev/movies";
-
-async function getMovies(id: String) {
-  console.log(`Fetching movies: ${Date.now()}`);
-  await new Promise((resolve) => setTimeout(resolve, 10000));
-  const response = await fetch(`${URL}/${id}`);
-  return response.json();
-}
-
-async function getVideos(id: String) {
-  console.log(`Fetching videos: ${Date.now()}`);
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  const response = await fetch(`${URL}/${id}/videos`);
-  return response.json();
-}
+import MovieVideos from "../../../../component/movie-videos";
+import MovieInfo from "../../../../component/movie-info";
+import { Suspense } from "react";
 
 export default async function MovieDeTail({ params: { id } }) {
-  const [movie, videos] = await Promise.all([getMovies(id), getVideos(id)]);
   return (
     <div>
-      <h1>{movie.title}</h1>
+      <h2>Movie Detail Page</h2>
+      <Suspense fallback={<h1>Loading movie info</h1>}>
+        <MovieInfo id={id} />
+      </Suspense>
+      <Suspense fallback={<h1>Loading movie videos</h1>}>
+        <MovieVideos id={id} />
+      </Suspense>
     </div>
   );
 }
